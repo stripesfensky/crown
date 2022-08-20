@@ -52,14 +52,6 @@
         var prevKey = ''
         var currentKey = ''
 
-        addEventListener('load', (event) => {
-            elem = document.documentElement
-
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen()
-            } 
-        })
-
         addEventListener('keyup', (event) => {
             if (acceptedInputs.includes(event.key)) {
                 key.innerHTML = event.key
