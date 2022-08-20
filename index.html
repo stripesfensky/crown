@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Digital Top Hat</title>
+    <style>
+        body {
+            display: flex;
+            margin: 0 auto;
+        }
+
+        #media {
+            min-width: 1024px;
+            width: 1024px;
+            height: 256px;
+            background-color: black;
+        }
+
+        #input {
+            font-family: sans-serif;
+            min-width: 256px;
+            width: 256px;
+            height: 256px;
+            background-color: aliceblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #key {
+            font-size: 100px;
+        }
+
+        #state {
+            font-size: 25px;
+        }
+    </style>
+</html>
+<body>
+    <div id="media"></div>
+    <div id="input">
+        <span id="key"></span>
+        <span id="state"></span>
+    </div>
+    <script>
+        const acceptedInputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        var media = document.getElementById('media').style
+        var key = document.getElementById('key')
+        var confirmation = document.getElementById('confirm')
+        var prevKey = ''
+        var currentKey = ''
+
+        addEventListener('load', (event) => {
+            elem = document.documentElement
+
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen()
+            } 
+        })
+
+        addEventListener('keyup', (event) => {
+            if (acceptedInputs.includes(event.key)) {
+                key.innerHTML = event.key
+                prevKey = currentKey
+                currentKey = event.key
+                state.innerHTML = "UNCONFIRMED"
+                if (currentKey == prevKey) {
+                    prevKey = ''
+                }
+            }
+            else if (event.key == "Enter") {
+                if (currentKey != prevKey) {
+                    state.innerHTML = "CONFIRMED"
+                    media.backgroundImage = 'url("media/' + currentKey + '.gif")'
+                }
+            }
+            else if (event.key == "0") {
+                prevKey = ''
+                currentKey = ''
+                key.innerHTML = '0'
+                state.innerHTML = 'FULLSCREEN'
+                media.backgroundImage = ''
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen()
+                } 
+            }
+            else if (event.key == ".") {
+                prevKey = ''
+                currentKey = ''
+                key.innerHTML = ''
+                state.innerHTML = 'STREAM<br>STOPPED'
+                media.backgroundImage = ''
+            }
+            else {
+                prevKey = ''
+                currentKey = ''
+                key.innerHTML = ''
+                state.innerHTML = ''
+            }
+        })
+    </script>
+</body>
+</html>
