@@ -38,10 +38,6 @@
             background-color: black;
         }
 
-        .selections > div:last-child {
-            background-color: aliceblue;
-        }
-
         .selections > div > span {
             background-color: black;
             color: white;
@@ -82,7 +78,7 @@
             <div id="7"><span>7</span></div>
             <div id="8"><span>8</span></div>
             <div id="9"><span>9</span></div>
-            <div id="."><span>.</span></div>
+            <div id="0"><span>0</span></div>
         </div>
         <div id="status">
             <span id="key"></span>
@@ -90,18 +86,49 @@
         </div>
     </div>
     <script>
-        const acceptedInputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        const acceptedInputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
         var media = document.getElementById('media').style
         var key = document.getElementById('key')
         var confirmation = document.getElementById('confirm')
         var prevKey = ''
         var currentKey = ''
+        
+        const mediaData = {
+            "1": [
+                {"id": "1", "file": "1.gif", "audio": ""},
+                {"id": "2", "file": "2.gif", "audio": ""},
+                {"id": "3", "file": "3.gif", "audio": ""},
+                {"id": "4", "file": "4.gif", "audio": ""},
+                {"id": "5", "file": "5.gif", "audio": ""},
+                {"id": "6", "file": "6.gif", "audio": ""},
+                {"id": "7", "file": "7.png", "audio": ""},
+                {"id": "8", "file": "8.png", "audio": ""},
+                {"id": "9", "file": "9.png", "audio": ""},
+                {"id": "0", "file": "10.gif", "audio": "10.mp3"}
+            ],
+            "2": [
+                {"id": "1", "file": "11.png", "audio": ""},
+                {"id": "2", "file": "12.png", "audio": ""},
+                {"id": "3", "file": "13.png", "audio": ""},
+                {"id": "4", "file": "14.png", "audio": ""},
+                {"id": "5", "file": "15.png", "audio": ""},
+                {"id": "6", "file": "16.png", "audio": ""},
+                {"id": "7", "file": "17.png", "audio": ""},
+                {"id": "8", "file": "18.png", "audio": ""},
+                {"id": "9", "file": "19.png", "audio": ""},
+                {"id": "0", "file": "20.png", "audio": ""}
+            ] 
+        }
+
+        var mediaIndex = 1
+        var mediaLibrary = mediaData[mediaIndex.toString()]
 
         window.addEventListener('load', (event) => {
-            for (let i = 1; i < 10; i++) {
-                document.getElementById(i.toString()).style.backgroundImage = 'url("media/' + i.toString() + '.gif")'
-                document.getElementById(i.toString()).style.backgroundSize = 'cover'
-                document.getElementById(i.toString()).style.backgroundPosition = 'center'
+            for (let i = 1; i < 11; i++) {
+                var mediaElement = mediaLibrary[i - 1]
+                document.getElementById(mediaElement.id).style.backgroundImage = 'url("media/' + mediaElement.file
+                document.getElementById(mediaElement.id).style.backgroundSize = 'cover'
+                document.getElementById(mediaElement.id).style.backgroundPosition = 'center'
             }
         })
 
@@ -121,7 +148,7 @@
                     media.backgroundImage = 'url("media/' + currentKey + '.gif")'
                 }
             }
-            else if (event.key == "0") {
+            else if (event.key == "*") {
                 prevKey = ''
                 currentKey = ''
                 key.innerHTML = '0'
@@ -130,6 +157,14 @@
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen()
                 } 
+            }
+            else if (event.key == "/") {
+                console.log("swapper")
+                prevKey = ''
+                currentKey = ''
+                key.innerHTML = ''
+                state.innerHTML = 'MEDIA SET<br>CHANGED'
+                media.backgroundImage = ''
             }
             else if (event.key == ".") {
                 prevKey = ''
