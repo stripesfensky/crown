@@ -134,22 +134,22 @@
                 {"id": "4", "file": "4.gif", "audio": ""},
                 {"id": "5", "file": "5.gif", "audio": ""},
                 {"id": "6", "file": "6.gif", "audio": ""},
-                {"id": "7", "file": "7.png", "audio": ""},
-                {"id": "8", "file": "8.png", "audio": ""},
-                {"id": "9", "file": "9.png", "audio": ""},
-                {"id": "0", "file": "10.gif", "audio": "10.mp3"}
+                {"id": "7", "file": "7.gif", "audio": "7.mp3"},
+                {"id": "8", "file": "", "audio": ""},
+                {"id": "9", "file": "", "audio": ""},
+                {"id": "0", "file": "", "audio": ""}
             ],
             "2": [
-                {"id": "1", "file": "11.png", "audio": ""},
-                {"id": "2", "file": "12.png", "audio": ""},
-                {"id": "3", "file": "13.png", "audio": ""},
-                {"id": "4", "file": "14.png", "audio": ""},
-                {"id": "5", "file": "15.png", "audio": ""},
-                {"id": "6", "file": "16.png", "audio": ""},
-                {"id": "7", "file": "17.png", "audio": ""},
-                {"id": "8", "file": "18.png", "audio": ""},
-                {"id": "9", "file": "19.png", "audio": ""},
-                {"id": "0", "file": "20.png", "audio": ""}
+                {"id": "1", "file": "", "audio": ""},
+                {"id": "2", "file": "", "audio": ""},
+                {"id": "3", "file": "", "audio": ""},
+                {"id": "4", "file": "", "audio": ""},
+                {"id": "5", "file": "", "audio": ""},
+                {"id": "6", "file": "", "audio": ""},
+                {"id": "7", "file": "", "audio": ""},
+                {"id": "8", "file": "", "audio": ""},
+                {"id": "9", "file": "", "audio": ""},
+                {"id": "0", "file": "", "audio": ""}
             ] 
         }
 
@@ -218,7 +218,7 @@
             else if (event.key == "/") {
                 reset()
                 state.innerHTML = 'MEDIA SET<br/>CHANGED'
-                if (mediaIndex == 2) {
+                if (mediaIndex == Object.keys(mediaData).length) {
                     mediaIndex = 1
                 }
                 else {
