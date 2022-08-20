@@ -23,9 +23,38 @@
             height: 256px;
             background-color: aliceblue;
             display: flex;
+            flex-direction: column;
+        }
+
+        .selections {
+            display: flex;
+            height: calc(256px/5);
+            width: 100%;
+        }
+
+        .selections > div {
+            min-width: calc(256px/5);
+            width: calc(256px/5);
+            background-color: black;
+        }
+
+        .selections > div:last-child {
+            background-color: aliceblue;
+        }
+
+        .selections > div > span {
+            background-color: black;
+            color: white;
+            padding: 0 5px;
+        }
+
+        #status {
+            display: flex;
+            flex-direction: column;
+            height: calc(256px - calc(256px/5));
+            width: 100%;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             text-align: center;
         }
 
@@ -41,8 +70,24 @@
 <body>
     <div id="media"></div>
     <div id="input">
-        <span id="key"></span>
-        <span id="state"></span>
+        <div class="selections">
+            <div id="1"><span>1</span></div>
+            <div id="2"><span>2</span></div>
+            <div id="3"><span>3</span></div>
+            <div id="4"><span>4</span></div>
+            <div id="5"><span>5</span></div>
+        </div>
+        <div class="selections">
+            <div id="6"><span>6</span></div>
+            <div id="7"><span>7</span></div>
+            <div id="8"><span>8</span></div>
+            <div id="9"><span>9</span></div>
+            <div id="."><span>.</span></div>
+        </div>
+        <div id="status">
+            <span id="key"></span>
+            <span id="state"></span>
+        </div>
     </div>
     <script>
         const acceptedInputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -52,7 +97,15 @@
         var prevKey = ''
         var currentKey = ''
 
-        addEventListener('keyup', (event) => {
+        window.addEventListener('load', (event) => {
+            for (let i = 1; i < 10; i++) {
+                document.getElementById(i.toString()).style.backgroundImage = 'url("media/' + i.toString() + '.gif")'
+                document.getElementById(i.toString()).style.backgroundSize = 'cover'
+                document.getElementById(i.toString()).style.backgroundPosition = 'center'
+            }
+        })
+
+        window.addEventListener('keyup', (event) => {
             if (acceptedInputs.includes(event.key)) {
                 key.innerHTML = event.key
                 prevKey = currentKey
