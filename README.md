@@ -1,2 +1,2 @@
 # Digital Top Hat
-Digital display controller/video player
+HTML-based media display for a customized digital screen
