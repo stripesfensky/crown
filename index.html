@@ -185,6 +185,14 @@
             else if (event.key == "/") {
                 reset()
                 state.innerHTML = 'MEDIA SET<br>CHANGED'
+                if (mediaIndex == 2) {
+                    mediaIndex = 1
+                }
+                else {
+                    mediaIndex += 1
+                }
+                mediaLibrary = mediaData[mediaIndex.toString()]
+                generatePreviews()
             }
             else if (event.key == ".") {
                 reset()
