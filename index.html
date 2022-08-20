@@ -123,13 +123,23 @@
         var mediaIndex = 1
         var mediaLibrary = mediaData[mediaIndex.toString()]
 
-        window.addEventListener('load', (event) => {
+        function generatePreviews() {
             for (let i = 1; i < 11; i++) {
                 var mediaElement = mediaLibrary[i - 1]
                 document.getElementById(mediaElement.id).style.backgroundImage = 'url("media/' + mediaElement.file
                 document.getElementById(mediaElement.id).style.backgroundSize = 'cover'
                 document.getElementById(mediaElement.id).style.backgroundPosition = 'center'
             }
+        }
+        
+        function reset() {
+            prevKey = ''
+            currentKey = ''
+            key.innerHTML = ''
+        }
+
+        window.addEventListener('load', (event) => {
+            generatePreviews()
         })
 
         window.addEventListener('keyup', (event) => {
@@ -160,23 +170,17 @@
             }
             else if (event.key == "/") {
                 console.log("swapper")
-                prevKey = ''
-                currentKey = ''
-                key.innerHTML = ''
+
                 state.innerHTML = 'MEDIA SET<br>CHANGED'
                 media.backgroundImage = ''
             }
             else if (event.key == ".") {
-                prevKey = ''
-                currentKey = ''
-                key.innerHTML = ''
+                reset()
                 state.innerHTML = 'STREAM<br>STOPPED'
                 media.backgroundImage = ''
             }
             else {
-                prevKey = ''
-                currentKey = ''
-                key.innerHTML = ''
+                reset()
                 state.innerHTML = ''
             }
         })
