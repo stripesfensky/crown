@@ -126,10 +126,22 @@
         function generatePreviews() {
             for (let i = 1; i < 11; i++) {
                 var mediaElement = mediaLibrary[i - 1]
-                document.getElementById(mediaElement.id).style.backgroundImage = 'url("media/' + mediaElement.file
+                document.getElementById(mediaElement.id).style.backgroundImage = 'url("media/' + mediaElement.file + '")'
                 document.getElementById(mediaElement.id).style.backgroundSize = 'cover'
                 document.getElementById(mediaElement.id).style.backgroundPosition = 'center'
             }
+        }
+
+        function setMedia(key) {
+            var i = key - 1
+            if (key == 0) {
+                i = 9
+            }
+            var mediaElement = mediaLibrary[i]
+            if (mediaElement.audio != '') {
+
+            }
+            media.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
         }
         
         function reset() {
@@ -155,7 +167,7 @@
             else if (event.key == "Enter") {
                 if (currentKey != prevKey) {
                     state.innerHTML = "CONFIRMED"
-                    media.backgroundImage = 'url("media/' + currentKey + '.gif")'
+                    setMedia(currentKey)
                 }
             }
             else if (event.key == "*") {
