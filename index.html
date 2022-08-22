@@ -35,6 +35,8 @@
         .selections > div {
             min-width: calc(256px/5);
             width: calc(256px/5);
+            min-height: calc(256px/5);
+            height: calc(256px/5);
             background-color: black;
             position: relative;
         }
@@ -176,6 +178,9 @@
             for (let i = 1; i < 11; i++) {
                 var mediaElement = mediaLibrary[i - 1]
                 var previewDiv = document.getElementById(mediaElement.id)
+                if (previewDiv.children.length > 1) {
+                    previewDiv.removeChild(previewDiv.children[previewDiv.children.length - 1])
+                }
                 if (mediaElement.file.includes("mp4")) {
                     var previewVideo = document.createElement("video")
                     previewVideo.src = 'media/' + mediaElement.file
