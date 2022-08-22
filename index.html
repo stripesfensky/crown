@@ -78,7 +78,21 @@
     </style>
 </html>
 <body>
-    <div id="media"></div>
+    <div id="media">
+        <div id="256-wrap" class="media-wrap">
+            <div id="256-1" class="256"></div>
+            <div id="256-2" class="256"></div>
+            <div id="256-3" class="256"></div>
+            <div id="256-4" class="256"></div>
+        </div>
+        <div id="512-wrap" class="media-wrap">
+            <div id="512-1" class="512"></div>
+            <div id="512-2" class="512"></div>
+        </div>
+        <div id="1024-wrap" class="media-wrap">
+            <div id="1024-1" class="1024"></div>
+        </div>
+    </div>
     <div id="input">
         <div class="selections">
             <div id="1"><span>1</span></div>
@@ -128,57 +142,62 @@
         
         const mediaData = {
             "1": [
-                {"id": "1", "file": "1.gif", "audio": ""},
-                {"id": "2", "file": "2.gif", "audio": ""},
-                {"id": "3", "file": "3.gif", "audio": ""},
-                {"id": "4", "file": "4.gif", "audio": ""},
-                {"id": "5", "file": "5.gif", "audio": ""},
-                {"id": "6", "file": "6.gif", "audio": ""},
-                {"id": "7", "file": "7.gif", "audio": "7.mp3"},
-                {"id": "8", "file": "", "audio": ""},
-                {"id": "9", "file": "", "audio": ""},
-                {"id": "0", "file": "", "audio": ""}
+                {"id": "1", "file": "1.gif"},
+                {"id": "2", "file": "2.gif"},
+                {"id": "3", "file": "3.gif"},
+                {"id": "4", "file": "4.gif"},
+                {"id": "5", "file": "5.gif"},
+                {"id": "6", "file": "6.gif"},
+                {"id": "7", "file": "7.mp4"},
+                {"id": "8", "file": ""},
+                {"id": "9", "file": ""},
+                {"id": "0", "file": ""}
             ],
             "2": [
-                {"id": "1", "file": "", "audio": ""},
-                {"id": "2", "file": "", "audio": ""},
-                {"id": "3", "file": "", "audio": ""},
-                {"id": "4", "file": "", "audio": ""},
-                {"id": "5", "file": "", "audio": ""},
-                {"id": "6", "file": "", "audio": ""},
-                {"id": "7", "file": "", "audio": ""},
-                {"id": "8", "file": "", "audio": ""},
-                {"id": "9", "file": "", "audio": ""},
-                {"id": "0", "file": "", "audio": ""}
-            ] 
+                {"id": "1", "file": ""},
+                {"id": "2", "file": ""},
+                {"id": "3", "file": ""},
+                {"id": "4", "file": ""},
+                {"id": "5", "file": ""},
+                {"id": "6", "file": ""},
+                {"id": "7", "file": ""},
+                {"id": "8", "file": ""},
+                {"id": "9", "file": ""},
+                {"id": "0", "file": ""}
+            ]
         }
 
         var mediaIndex = 1
         var mediaLibrary = mediaData[mediaIndex.toString()]
-        var audio = new Audio()
 
         function generatePreviews() {
             for (let i = 1; i < 11; i++) {
                 var mediaElement = mediaLibrary[i - 1]
-                document.getElementById(mediaElement.id).style.backgroundImage = 'url("media/' + mediaElement.file + '")'
-                document.getElementById(mediaElement.id).style.backgroundSize = 'cover'
-                document.getElementById(mediaElement.id).style.backgroundPosition = 'center'
+                var previewDiv = document.getElementById(mediaElement.id)
+                if (mediaElement.file.includes("mp4")) {
+                    var previewVideo = document.createElement("video")
+                    previewVideo.src = 'media/' + mediaElement.file
+                    previewVideo.autoplay = true
+                    previewVideo.muted = true
+                    previewVideo.width = 256 / 5
+                    previewVideo.height = 256 / 5
+                    previewVideo.controls = false
+                    previewDiv.appendChild(previewVideo)
+                }
+                else {
+                    previewDiv.style.backgroundImage = 'url("media/' + mediaElement.file + '")'
+                    previewDiv.style.backgroundSize = 'cover'
+                    previewDiv.style.backgroundPosition = 'center'
+                }
             }
         }
 
         function setMedia(key) {
-            audio.pause()
             var i = key - 1
             if (key == 0) {
                 i = 9
             }
             var mediaElement = mediaLibrary[i]
-            if (mediaElement.audio != '') {
-                audio = new Audio("media/" + mediaElement.audio)
-                audio.loop = true
-                audio.load()
-                audio.play()
-            }
             media.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
         }
         
@@ -193,50 +212,52 @@
         })
 
         window.addEventListener('keyup', (event) => {
-            if (acceptedInputs.includes(event.key)) {
-                key.innerHTML = event.key
-                prevKey = currentKey
-                currentKey = event.key
-                state.innerHTML = "UNCONFIRMED"
-                if (currentKey == prevKey) {
-                    prevKey = ''
+            if (event.location == "3") {
+                if (acceptedInputs.includes(event.key)) {
+                    key.innerHTML = event.key
+                    prevKey = currentKey
+                    currentKey = event.key
+                    state.innerHTML = "UNCONFIRMED"
+                    if (currentKey == prevKey) {
+                        prevKey = ''
+                    }
                 }
-            }
-            else if (event.key == "Enter") {
-                if (currentKey != prevKey) {
-                    state.innerHTML = "CONFIRMED"
-                    setMedia(currentKey)
+                else if (event.key == "Enter") {
+                    if (currentKey != prevKey) {
+                        state.innerHTML = "CONFIRMED"
+                        setMedia(currentKey)
+                    }
                 }
-            }
-            else if (event.key == "*") {
-                reset()
-                state.innerHTML = 'FULLSCREEN'
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen()
-                } 
-            }
-            else if (event.key == "/") {
-                reset()
-                state.innerHTML = 'MEDIA SET<br/>CHANGED'
-                if (mediaIndex == Object.keys(mediaData).length) {
-                    mediaIndex = 1
+                else if (event.key == "*") {
+                    reset()
+                    state.innerHTML = 'FULLSCREEN'
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen()
+                    } 
+                }
+                else if (event.key == "/") {
+                    reset()
+                    state.innerHTML = 'MEDIA SET<br/>CHANGED'
+                    if (mediaIndex == Object.keys(mediaData).length) {
+                        mediaIndex = 1
+                    }
+                    else {
+                        mediaIndex += 1
+                    }
+                    mediaLibrary = mediaData[mediaIndex.toString()]
+                    generatePreviews()
+                }
+                else if (event.key == ".") {
+                    reset()
+                    state.innerHTML = 'STREAM<br/>STOPPED'
+                    media.backgroundImage = ''
                 }
                 else {
-                    mediaIndex += 1
-                }
-                mediaLibrary = mediaData[mediaIndex.toString()]
-                generatePreviews()
+                    reset()
+                    state.innerHTML = ''
+                }                
             }
-            else if (event.key == ".") {
-                reset()
-                state.innerHTML = 'STREAM<br/>STOPPED'
-                media.backgroundImage = ''
-                audio.pause()
-            }
-            else {
-                reset()
-                state.innerHTML = ''
-            }
+
         })
     </script>
 </body>
