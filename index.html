@@ -83,18 +83,18 @@
 </html>
 <body>
     <div id="media">
-        <div id="256-wrap" class="media-wrap">
-            <div id="256-1" class="256"></div>
-            <div id="256-2" class="256"></div>
-            <div id="256-3" class="256"></div>
-            <div id="256-4" class="256"></div>
+        <div id="quarter" class="media-wrap">
+            <div class="quarter"></div>
+            <div class="quarter"></div>
+            <div class="quarter"></div>
+            <div class="quarter"></div>
         </div>
-        <div id="512-wrap" class="media-wrap">
-            <div id="512-1" class="512"></div>
-            <div id="512-2" class="512"></div>
+        <div id="half" class="media-wrap">
+            <div id="half" class="half"></div>
+            <div id="half" class="half"></div>
         </div>
-        <div id="1024-wrap" class="media-wrap">
-            <div id="1024-1" class="1024"></div>
+        <div id="full" class="media-wrap">
+            <div id="full" class="full"></div>
         </div>
     </div>
     <div id="input">
@@ -152,7 +152,7 @@
                 {"id": "4", "file": "4.gif"},
                 {"id": "5", "file": "5.gif"},
                 {"id": "6", "file": "6.gif"},
-                {"id": "7", "file": "7.mp4"},
+                {"id": "7", "file": "7.mp4", "width": 256},
                 {"id": "8", "file": ""},
                 {"id": "9", "file": ""},
                 {"id": "0", "file": ""}
@@ -205,7 +205,38 @@
                 i = 9
             }
             var mediaElement = mediaLibrary[i]
-            media.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
+            if (mediaElement.file.includes(".mp4")) {
+                var mediaVideo = document.createElement("video")
+                mediaVideo.src = 'media/' + mediaElement.file
+                mediaVideo.autoplay = true
+                mediaVideo.width = mediaElement.width
+                mediaVideo.height = 256
+                mediaVideo.controls = false
+                var selectWrapper = null 
+
+                if (mediaElement.width == 256) {
+                    selectWrapper = 'quarter'
+                }
+                else if (mediaElement.width == 512) {
+                    selectWrapper = 'half'
+                }
+                else if (mediaElement.width == 1024) {
+                    selectWrapper = 'full'
+                }
+                
+                var wrapper = document.getElementById(selectWrapper)
+
+                var repeatAmount = 1024 / mediaElement.width
+                for (let i = 0; i < repeatAmount; i++) {
+                    wrapper.children[i].appendChild(mediaVideo)
+                }
+                for (let i = 0; i < repeatAmount; i++) {
+                    console.log(wrapper.children[i])
+                }
+            }
+            else {
+                media.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
+            }
         }
         
         function reset() {
@@ -232,6 +263,7 @@
                 else if (event.key == "Enter") {
                     if (currentKey != prevKey) {
                         state.innerHTML = "CONFIRMED"
+                        media.backgroundImage = ''
                         setMedia(currentKey)
                     }
                 }
