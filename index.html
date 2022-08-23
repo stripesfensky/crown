@@ -15,6 +15,32 @@
             width: 1024px;
             height: 256px;
             background-color: black;
+            position: relative;
+        }
+
+        .media-wrap {
+            display: flex;
+            position: absolute;
+        }
+
+        .quarter, .half, .full {
+            min-height: 256px;
+            height: 256px;
+        }
+
+        .quarter {
+            min-width: 256px;
+            width: 256px;
+        }
+
+        .half {
+            min-width: 512px;
+            width: 512px;
+        }
+
+        .full {
+            min-width: 1024px;
+            width: 1024px;
         }
 
         #input {
@@ -30,6 +56,7 @@
             display: flex;
             height: calc(256px/5);
             width: 100%;
+            justify-content: flex-end;
         }
 
         .selections > div {
@@ -39,6 +66,8 @@
             height: calc(256px/5);
             background-color: black;
             position: relative;
+            display: flex;
+            overflow: hidden;
         }
 
         .selections > div > span {
@@ -46,6 +75,11 @@
             color: white;
             padding: 0 5px;
             position: absolute;
+        }
+
+        .selections > div > video {
+            margin-left: -50%;
+            margin-right: 0 auto;
         }
 
         #status {
@@ -153,8 +187,8 @@
                 {"id": "5", "file": "5.gif"},
                 {"id": "6", "file": "6.gif"},
                 {"id": "7", "file": "7.mp4", "width": 256},
-                {"id": "8", "file": ""},
-                {"id": "9", "file": ""},
+                {"id": "8", "file": "8.mp4", "width": 512},
+                {"id": "9", "file": "9.mp4", "width": 1024},
                 {"id": "0", "file": ""}
             ],
             "2": [
@@ -186,9 +220,9 @@
                     previewVideo.src = 'media/' + mediaElement.file
                     previewVideo.autoplay = true
                     previewVideo.muted = true
-                    previewVideo.width = 256 / 5
                     previewVideo.height = 256 / 5
                     previewVideo.controls = false
+                    previewVideo.loop = true
                     previewDiv.appendChild(previewVideo)
                 }
                 else {
@@ -206,28 +240,32 @@
             }
             var mediaElement = mediaLibrary[i]
             if (mediaElement.file.includes(".mp4")) {
-                var mediaVideo = document.createElement("video")
-                mediaVideo.src = 'media/' + mediaElement.file
-                mediaVideo.autoplay = true
-                mediaVideo.width = mediaElement.width
-                mediaVideo.height = 256
-                mediaVideo.controls = false
-                var selectWrapper = null 
+                var selectWrapper = null
+                var videos = []
+                var repeatAmount = 1024 / mediaElement.width
 
-                if (mediaElement.width == 256) {
+                if (repeatAmount == 4) {
                     selectWrapper = 'quarter'
                 }
-                else if (mediaElement.width == 512) {
+                else if (repeatAmount == 2) {
                     selectWrapper = 'half'
                 }
-                else if (mediaElement.width == 1024) {
+                else if (repeatAmount == 1) {
                     selectWrapper = 'full'
                 }
                 
-                var wrapper = document.getElementById(selectWrapper)
-
-                var repeatAmount = 1024 / mediaElement.width
                 for (let i = 0; i < repeatAmount; i++) {
+                    var wrapper = document.getElementById(selectWrapper)
+                    var mediaVideo = document.createElement("video")
+                    mediaVideo.src = 'media/' + mediaElement.file
+                    mediaVideo.autoplay = true
+                    if (i >= 0) {
+                        mediaVideo.muted = true
+                    }
+                    mediaVideo.width = mediaElement.width
+                    mediaVideo.height = 256
+                    mediaVideo.controls = false
+                    mediaVideo.loop = true
                     wrapper.children[i].appendChild(mediaVideo)
                 }
                 for (let i = 0; i < repeatAmount; i++) {
