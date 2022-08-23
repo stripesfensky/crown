@@ -119,11 +119,11 @@
             <div class="quarter"></div>
         </div>
         <div id="half" class="media-wrap">
-            <div id="half" class="half"></div>
-            <div id="half" class="half"></div>
+            <div class="half"></div>
+            <div class="half"></div>
         </div>
         <div id="full" class="media-wrap">
-            <div id="full" class="full"></div>
+            <div class="full"></div>
         </div>
     </div>
     <div id="input">
@@ -202,6 +202,26 @@
 
         var mediaIndex = 1
         var mediaLibrary = mediaData[mediaIndex.toString()]
+        
+        function resetKeySelection() {
+            prevKey = ''
+            currentKey = ''
+            key.innerHTML = ''
+        }
+
+        function emptyWrappers(wrapper) {
+            console.log(currentKey)
+            for (let i = 0; i < wrapper.length; i++) {
+                console.log("ORIGINAL:")
+                console.log(wrapper[i])
+            }
+        }
+
+        function resetMedia() {
+            media.backgroundImage = ''
+            emptyWrappers(document.querySelectorAll(".quarter"))
+            return 1
+        }
 
         function generatePreviews() {
             for (let i = 1; i < 11; i++) {
@@ -234,7 +254,8 @@
             }
         }
 
-        function setMedia(key) {
+        async function setMedia(key) {
+            const promise = await resetMedia();
             var i = key - 1
             if (key == 0) {
                 i = 9
@@ -268,20 +289,13 @@
                     mediaVideo.controls = false
                     mediaVideo.loop = true
                     wrapper.children[i].appendChild(mediaVideo)
-                }
-                for (let i = 0; i < repeatAmount; i++) {
+                    console.log("NEW:")
                     console.log(wrapper.children[i])
                 }
             }
             else {
                 media.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
             }
-        }
-        
-        function reset() {
-            prevKey = ''
-            currentKey = ''
-            key.innerHTML = ''
         }
 
         window.addEventListener('load', (event) => {
@@ -294,28 +308,26 @@
                     key.innerHTML = event.key
                     prevKey = currentKey
                     currentKey = event.key
-                    state.innerHTML = "UNCONFIRMED"
                     if (currentKey == prevKey) {
                         prevKey = ''
                     }
+                    state.innerHTML = "UNCONFIRMED"
                 }
                 else if (event.key == "Enter") {
                     if (currentKey != prevKey) {
-                        state.innerHTML = "CONFIRMED"
-                        media.backgroundImage = ''
                         setMedia(currentKey)
+                        state.innerHTML = "CONFIRMED"
                     }
                 }
                 else if (event.key == "*") {
-                    reset()
-                    state.innerHTML = 'FULLSCREEN'
+                    resetKeySelection()
                     if (document.documentElement.requestFullscreen) {
                         document.documentElement.requestFullscreen()
-                    } 
+                    }
+                    state.innerHTML = 'FULLSCREEN'
                 }
                 else if (event.key == "/") {
-                    reset()
-                    state.innerHTML = 'MEDIA SET<br/>CHANGED'
+                    resetKeySelection()
                     if (mediaIndex == Object.keys(mediaData).length) {
                         mediaIndex = 1
                     }
@@ -324,14 +336,15 @@
                     }
                     mediaLibrary = mediaData[mediaIndex.toString()]
                     generatePreviews()
+                    state.innerHTML = 'MEDIA SET<br/>CHANGED'
                 }
                 else if (event.key == ".") {
-                    reset()
+                    resetKeySelection()
+                    resetMedia()
                     state.innerHTML = 'STREAM<br/>STOPPED'
-                    media.backgroundImage = ''
                 }
                 else {
-                    reset()
+                    resetKeySelection()
                     state.innerHTML = ''
                 }                
             }
