@@ -77,11 +77,6 @@
             position: absolute;
         }
 
-        .selections > div > video {
-            margin-left: -50%;
-            margin-right: 0 auto;
-        }
-
         #status {
             display: flex;
             flex-direction: column;
@@ -223,6 +218,12 @@
                     previewVideo.height = 256 / 5
                     previewVideo.controls = false
                     previewVideo.loop = true
+                    if (mediaElement.width == 512) {
+                        previewVideo.style.marginLeft = "-50%"
+                    }
+                    if (mediaElement.width == 1024) {
+                        previewVideo.style.marginLeft = "-150%"
+                    }
                     previewDiv.appendChild(previewVideo)
                 }
                 else {
