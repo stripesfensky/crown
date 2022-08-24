@@ -111,22 +111,7 @@
     </style>
 </html>
 <body>
-    <div id="media">
-        <!-- Template -->
-        <!--<div id="quarter" class="media-wrap">
-            <div class="quarter"></div>
-            <div class="quarter"></div>
-            <div class="quarter"></div>
-            <div class="quarter"></div>
-        </div>
-        <div id="half" class="media-wrap">
-            <div class="half"></div>
-            <div class="half"></div>
-        </div>
-        <div id="full" class="media-wrap">
-            <div class="full"></div>
-        </div>-->
-    </div>
+    <div id="media"></div>
     <div id="input">
         <div class="selections">
             <div id="1"><span>1</span></div>
@@ -167,6 +152,7 @@
         </span>
     </div>
     <script>
+        // GLOBAL VARIABLES //
         const mediaData = {
             "1": [
                 {"id": "1", "file": "1.gif", "type": "image"},
@@ -196,20 +182,22 @@
 
         var mediaIndex = 1
         var mediaLibrary = mediaData[mediaIndex.toString()]
-        var currentMediaType = null
 
+        // MEDIA HANDLING //
+        var currentMediaType = null
         var mediaDiv = document.getElementById('media')
 
         function resetMedia() {
             if (currentMediaType == "video") {
                 if (mediaDiv.children.length > 0) {
-                    console.log(mediaDiv.children)
+                    for (let i = 0; i < mediaDiv.children.length; i++) {
+                        mediaDiv.removeChild(mediaDiv.children[i])
+                    }
                 }
             }
             else {
                 mediaDiv.style.backgroundImage = ''
             }
-            console.log("FINISHED RESET")
             return 0
         }
 
@@ -224,39 +212,76 @@
                     var mediaElement = mediaLibrary[i]
                     currentMediaType = mediaElement.type
                     if (currentMediaType == "video") {
+                        // INITIALIZE WRAPPER STRUCTURE //
+                        var mainName = (1024 / mediaElement.width) == 4 ? "quarter" : (1024 / mediaElement.width) == 2 ? "half" : (1024 / mediaElement.width) == 1 ? "full" : null
+                        if (mainName != null) {
+                            var mainDiv = document.createElement("div")
+                            mainDiv.id = mainName
+                            mainDiv.className = "media-wrap"
 
+                            for (let i = 0; i < 1024 / mediaElement.width; i++) {
+                                // CREATE VIDEO //
+                                var video = document.createElement("video")
+                                video.src = 'media/' + mediaElement.file
+                                video.autoplay = true
+                                if (i == 0) {
+                                    video.muted = false
+                                }
+                                else {
+                                    video.muted = true
+                                }
+                                video.width = mediaElement.width
+                                video.height = 256
+                                video.controls = false
+                                video.loop = true
+
+                                // CREATE CHILD AND ADD //
+                                var childName = (1024 / mediaElement.width) == 4 ? "quarter" : (1024 / mediaElement.width) == 2 ? "half" : (1024 / mediaElement.width) == 1 ? "full" : null
+                                if (childName != null) {
+                                    var childDiv = document.createElement("div")
+                                    childDiv.className = childName
+                                    childDiv.appendChild(video)
+                                }
+                                mainDiv.appendChild(childDiv)
+                            }
+                        }
+                        // ADD TO MEDIA DISPLAY //
+                        mediaDiv.appendChild(mainDiv)
                     }
                     else {
-                        mediaDiv.style.backgroundImage = 'url("media/' + mediaElement.file + '?a=' + Math.random() + '")'
+                        if (mediaElement.file != "") {
+                            mediaDiv.style.backgroundImage = 'url("media/' + mediaElement.file + '?s=' + Math.floor(Math.random() * 99999) + '")'
+                        }
                     }
                 }                
             }
         }
 
         // PREVIEW HANDLING //
-
         function generatePreviews() {
-            for (let i = 1; i < 11; i++) {
-                var mediaElement = mediaLibrary[i - 1]
+            for (let i = 0; i < mediaLibrary.length; i++) {
+                var mediaElement = mediaLibrary[i]
                 var previewDiv = document.getElementById(mediaElement.id)
+                // REMOVE LAST CHILD (PREVIEW MEDIA)
                 if (previewDiv.children.length > 1) {
                     previewDiv.removeChild(previewDiv.children[previewDiv.children.length - 1])
                 }
+                // CREATE PREVIEW MEDIA
                 if (mediaElement.file.includes("mp4")) {
-                    var previewVideo = document.createElement("video")
-                    previewVideo.src = 'media/' + mediaElement.file
-                    previewVideo.autoplay = true
-                    previewVideo.muted = true
-                    previewVideo.height = 256 / 5
-                    previewVideo.controls = false
-                    previewVideo.loop = true
+                    var preview = document.createElement("video")
+                    preview.src = 'media/' + mediaElement.file
+                    preview.autoplay = true
+                    preview.muted = true
+                    preview.height = 256 / 5
+                    preview.controls = false
+                    preview.loop = true
                     if (mediaElement.width == 512) {
-                        previewVideo.style.marginLeft = "-50%"
+                        preview.style.marginLeft = "-50%"
                     }
                     if (mediaElement.width == 1024) {
-                        previewVideo.style.marginLeft = "-150%"
+                        preview.style.marginLeft = "-150%"
                     }
-                    previewDiv.appendChild(previewVideo)
+                    previewDiv.appendChild(preview)
                 }
                 else {
                     previewDiv.style.backgroundImage = 'url("media/' + mediaElement.file + '")'
@@ -267,7 +292,6 @@
         }
 
         // KEY CONTROLLERS //
-
         var key = document.getElementById('key')
         var confirmation = document.getElementById('confirm')
         var prevKey = ''
